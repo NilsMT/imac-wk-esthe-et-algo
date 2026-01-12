@@ -1,6 +1,6 @@
 # Workshop - Esthétique & Algorithmique
 
-Ce dépôt contient les fichiers sources pour le workshop "Esthétique & Algorithmique" de l'IMAC (S1 - 2026).
+Ce dépôt contient les fichiers sources pour le workshop "Esthétique & Algorithmique"
 
 ## Structure du dépôt
 
@@ -22,3 +22,19 @@ Le trou noir n'utilise pas la réel modélisation physique (plus complexe) et ut
 le "halo" jaune est fait avec des lignes et le "coeur" noir avec un simple cercle noir.
 
 > ⚠️ J'ai utilisé ChatGPT pour m'aider à calculer l'offset des lignes en fonction de l'angle (plus proche de l'axe horizontal = plus d'offset) pour la ligne horizontal courbé car je suis nul en math.
+
+## Cellular Automata
+
+> XXX
+
+## Digital Litterature
+
+> XXX
+
+## Fractals
+
+> XXX
+
+## Free Exploration
+
+> XXX

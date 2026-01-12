@@ -111,94 +111,106 @@ function draw() {
         btn.html("Trou noir");
         strokeWeight(1);
 
-        let x = width;
-        let y = height;
-
-        let midX = x / 2;
-        let midY = y / 2;
-
-        let precision = 3000; //more = better precision
-        let radius = min(width, height) * 0.2;
-        let length = 100;
-
-        //blackhole outer layers
-        for (let angle = 0; angle < TWO_PI; angle += TWO_PI / precision) {
-            let endX = midX + Math.cos(angle) * radius;
-            let endY = midY + Math.sin(angle) * radius;
-
-            stroke(255, 215, 0);
-            line(midX, midY, endX, endY); //circle
-            line(
-                endX,
-                endY,
-                endX + Math.cos(angle) * length, //100 for length, trace a line from outer circle based on angle (-1 to 1)
-                endY - Math.sin(angle) * length //100 for length, trace a line from outer circle based on angle (-1 to 1)
-            );
-        }
-
-        //blackhole center layers
-        stroke(0);
-        ellipse(midX, midY, radius * 1.5, radius * 1.5);
-        fill(0);
-
-        //blackhole horizontal lines (curved)
-        //help of chatGPT to make the next part (figuring out the offset based on angle distance)
-        const range = Math.PI / 6;
-        const maxOff = length;
-
-        for (let angle = 0; angle < TWO_PI; angle += TWO_PI / precision) {
-            let isNearZ = angle < range || angle > TWO_PI - range;
-            let isNearPi = Math.abs(angle - Math.PI) < range;
-
-            if (!isNearZ && !isNearPi) continue;
-
-            //pick center angle
-            let centerAngle = isNearPi ? Math.PI : 0;
-
-            //calculate distance from center angle
-            //closer from hitting the edge = more offset
-            //offset is based on distance
-            let diff = Math.atan2(
-                Math.sin(angle - centerAngle),
-                Math.cos(angle - centerAngle)
-            ); //shortest angle difference
-            let dist = Math.abs(diff);
-
-            let t = dist / range;
-            t = Math.min(t, 1);
-
-            let off = t * maxOff;
-            /////
-
-            let ox = Math.cos(angle) * off;
-            let oy = Math.sin(angle) * off;
-
-            let startX = midX + ox;
-            let startY = midY + oy;
-
-            let endX = midX + Math.cos(angle) * radius;
-            let endY = midY + Math.sin(angle) * radius;
-
-            stroke(255, 215, 0);
-            line(startX, startY, endX, endY);
-            line(
-                endX,
-                endY,
-                endX + Math.cos(angle) * length,
-                endY - Math.sin(angle) * length
-            );
-        }
-
-        //previous line I made, so horizontal line is 2/PI to -2/PI
-        /*
-        strokeWeight(10);
-        stroke(255, 255, 0);
-        line(
-            midX - Math.sin(Math.PI / 2) * length,
-            midY - Math.cos(Math.PI / 2) * length,
-            midX + Math.sin(Math.PI / 2) * length,
-            midY + Math.cos(Math.PI / 2) * length
-        );
-        */
+        drawBlackhole();
     }
+}
+
+/////////////
+/////////////
+/////////////
+/////////////
+/////////////
+
+function drawBlackhole() {
+    console.warn("a");
+
+    let x = width;
+    let y = height;
+
+    let midX = x / 2;
+    let midY = y / 2;
+
+    let precision = 3000; //more = better precision
+    let radius = min(width, height) * 0.2;
+    let length = 100;
+
+    //blackhole outer layers
+    for (let angle = 0; angle < TWO_PI; angle += TWO_PI / precision) {
+        let endX = midX + Math.cos(angle) * radius;
+        let endY = midY + Math.sin(angle) * radius;
+
+        stroke(255, 215, 0);
+        line(midX, midY, endX, endY); //circle
+        line(
+            endX,
+            endY,
+            endX + Math.cos(angle) * length, //100 for length, trace a line from outer circle based on angle (-1 to 1)
+            endY - Math.sin(angle) * length //100 for length, trace a line from outer circle based on angle (-1 to 1)
+        );
+    }
+
+    //blackhole center layers
+    stroke(0);
+    ellipse(midX, midY, radius * 1.5, radius * 1.5);
+    fill(0);
+
+    //blackhole horizontal lines (curved)
+    //help of chatGPT to make the next part (figuring out the offset based on angle distance)
+    const range = Math.PI / 8;
+    const maxOff = length;
+
+    for (let angle = 0; angle < TWO_PI; angle += TWO_PI / precision) {
+        let isNearZ = angle < range || angle > TWO_PI - range;
+        let isNearPi = Math.abs(angle - Math.PI) < range;
+
+        if (!isNearZ && !isNearPi) continue;
+
+        //pick center angle
+        let centerAngle = isNearPi ? Math.PI : 0;
+
+        //calculate distance from center angle
+        //closer from hitting the edge = more offset
+        //offset is based on distance
+        let diff = Math.atan2(
+            Math.sin(angle - centerAngle),
+            Math.cos(angle - centerAngle)
+        ); //shortest angle difference
+        let dist = Math.abs(diff);
+
+        let t = dist / range;
+        t = Math.min(t, 1);
+
+        let off = t * maxOff;
+        /////
+
+        let ox = Math.cos(angle) * off;
+        let oy = Math.sin(angle) * off;
+
+        let startX = midX + ox;
+        let startY = midY + oy;
+
+        let endX = midX + Math.cos(angle) * radius;
+        let endY = midY + Math.sin(angle) * radius;
+
+        stroke(255, 215, 0);
+        line(startX, startY, endX, endY);
+        line(
+            endX,
+            endY,
+            endX + Math.cos(angle) * length,
+            endY - Math.sin(angle) * length
+        );
+    }
+
+    //previous line I made, so horizontal line is 2/PI to -2/PI
+    /*
+    strokeWeight(10);
+    stroke(255, 255, 0);
+    line(
+        midX - Math.sin(Math.PI / 2) * length,
+        midY - Math.cos(Math.PI / 2) * length,
+        midX + Math.sin(Math.PI / 2) * length,
+        midY + Math.cos(Math.PI / 2) * length
+    );
+    */
 }
