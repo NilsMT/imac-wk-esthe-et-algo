@@ -32,14 +32,18 @@ function setup() {
 
     createCanvas(cellSize * col + 5, cellSize * row + 5);
 
-    pauseBtn = createButton("currently paused");
+    const container = createDiv();
+    container.id("container");
 
+    pauseBtn = createButton("currently paused");
     pauseBtn.mousePressed(handlePause);
+    pauseBtn.parent(container);
 
     let resetBtn = createButton("reset board");
     resetBtn.mousePressed(function () {
         fillBoard();
     });
+    resetBtn.parent(container);
 
     fillBoard();
     frameRate(15);
