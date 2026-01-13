@@ -1,6 +1,6 @@
 //configurable
 let config = {
-    filled: true,
+    filled: false,
     caveGenerationDuration: 30,
     oreDiffusionDuration: 3,
     cellState: {
