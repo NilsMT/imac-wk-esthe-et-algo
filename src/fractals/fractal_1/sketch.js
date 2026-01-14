@@ -13,6 +13,7 @@ const UI = {
 let maxBranch = 8;
 let maxDepth = 7;
 let spawnRate = 50;
+let treeOpacity = 0;
 let angleSpread = Math.PI / 4;
 let branchLength = 100;
 
@@ -27,6 +28,7 @@ const END_HUE = 0; //red at end
 let numSlider;
 let depthSlider;
 let spawnRateSlider;
+let treeOpacitySlider;
 let angleSlider;
 let lenSlider;
 
@@ -50,6 +52,7 @@ function draw() {
     let newMaxBranch = numSlider.value();
     let newMaxDepth = depthSlider.value();
     let newSpawnRate = spawnRateSlider.value();
+    let newTreeOpacity = treeOpacitySlider.value();
     let newAngleSpread = angleSlider.value();
     let newBranchLength = lenSlider.value();
 
@@ -57,6 +60,7 @@ function draw() {
         maxBranch !== newMaxBranch ||
         maxDepth !== newMaxDepth ||
         spawnRate !== newSpawnRate ||
+        treeOpacity != newTreeOpacity ||
         angleSpread != newAngleSpread ||
         branchLength != newBranchLength
     ) {
@@ -66,6 +70,7 @@ function draw() {
         maxBranch = newMaxBranch;
         maxDepth = newMaxDepth;
         spawnRate = newSpawnRate;
+        treeOpacity = newTreeOpacity;
         angleSpread = newAngleSpread;
         branchLength = newBranchLength;
 
@@ -103,11 +108,17 @@ function drawSliders() {
     spawnRateSlider.position(UI.marginX + UI.colSpacing * 2, UI.marginY);
 
     //row 1
+    treeOpacitySlider = createSlider(0, 100, treeOpacity, 1);
+    treeOpacitySlider.position(UI.marginX, UI.marginY + UI.rowHeight);
+
     angleSlider = createSlider(0, PI / 2, angleSpread, 0.001);
-    angleSlider.position(UI.marginX, UI.marginY + UI.rowHeight);
+    angleSlider.position(UI.marginX + UI.colSpacing, UI.marginY + UI.rowHeight);
 
     lenSlider = createSlider(0, 200, branchLength, 1);
-    lenSlider.position(UI.marginX + UI.colSpacing, UI.marginY + UI.rowHeight);
+    lenSlider.position(
+        UI.marginX + UI.colSpacing * 2,
+        UI.marginY + UI.rowHeight
+    );
 }
 
 //draw the UI texts (using a flex-wrap like thing)
@@ -135,13 +146,18 @@ function drawUI() {
 
     //row 1
     text(
-        "Branch angle: " + round(degrees(angleSpread)) + "°",
+        "Tree opacity: " + treeOpacity + "%",
         UI.marginX - off.x,
         UI.marginY + UI.rowHeight - off.y
     );
     text(
-        "Zoom: " + branchLength + "%",
+        "Branch angle: " + round(degrees(angleSpread)) + "°",
         UI.marginX + UI.colSpacing - off.x,
+        UI.marginY + UI.rowHeight - off.y
+    );
+    text(
+        "Zoom: " + branchLength + "%",
+        UI.marginX + UI.colSpacing * 2 - off.x,
         UI.marginY + UI.rowHeight - off.y
     );
 }
@@ -167,7 +183,7 @@ function createBranchTree(pos, len, depth, angle = 0) {
     let endPos = p5.Vector.add(pos, createVector(dx, dy));
 
     let hueValue = map(depth, 0, maxDepth, START_HUE, END_HUE);
-    stroke(hueValue, 100, 100);
+    stroke(hueValue, 100, 100, treeOpacity / 100);
 
     line(pos.x, pos.y, endPos.x, endPos.y);
 
