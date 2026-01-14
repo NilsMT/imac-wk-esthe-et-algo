@@ -7,9 +7,13 @@
     font-size: 16px;
 }
 
+body {
+    background: #d0d0d0;
+}
+
 a:not(.special),
 button {
-    background: #d0d0d0;
+    background: #b0b0b0;
     padding: var(--padding);
     color: #000;
     text-decoration: none;
@@ -22,7 +26,7 @@ button {
 
 a:not(.special):hover,
 button:hover {
-    filter: brightness(0.9);
+    filter: brightness(0.75);
     border-style: dotted;
     cursor: pointer;
 }

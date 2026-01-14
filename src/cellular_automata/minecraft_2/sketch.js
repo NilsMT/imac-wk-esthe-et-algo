@@ -174,7 +174,7 @@ function setup() {
 //update
 function draw() {
     //key input
-    if (keyIsDown(32) && millis() - lastSpaceTime > cooldown) {
+    if (keyIsDown(13) && millis() - lastSpaceTime > cooldown) {
         //space
         handlePause();
         lastSpaceTime = millis();

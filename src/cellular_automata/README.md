@@ -12,6 +12,12 @@ Explorations d'algorithmes d'automates cellulaires pour la génération de struc
 └───minecraft_2 : Générateur de terrain style Minecraft (basique)
 ```
 
+## Interactions
+
+Il est possible de dessiner en cliquant sur une case.
+
+La touche <kbd>Entrée ⏎</kbd> permet de mettre en pause ou de reprendre, et la touche <kbd>R</kbd> permet de réinitialiser le plateau.
+
 ## Projets
 
 ### **cavern_1** - Génération Simple de Cavernes

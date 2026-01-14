@@ -189,7 +189,7 @@ function draw() {
     renderBoard();
     updateBoard();
 
-    if (keyIsDown(32) && millis() - lastSpaceTime > cooldown) {
+    if (keyIsDown(13) && millis() - lastSpaceTime > cooldown) {
         //space
         handlePause();
         lastSpaceTime = millis();

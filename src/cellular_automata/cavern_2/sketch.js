@@ -57,6 +57,7 @@ function setup() {
     ruleBtn.mousePressed(function () {
         isRuleB = !isRuleB;
         ruleBtn.html(isRuleB ? "Règle B" : "Règle A");
+        fillBoard();
     });
     ruleBtn.parent(container);
 
@@ -69,7 +70,7 @@ function draw() {
     renderBoard();
     updateBoard();
 
-    if (keyIsDown(32) && millis() - lastSpaceTime > cooldown) {
+    if (keyIsDown(13) && millis() - lastSpaceTime > cooldown) {
         //space
         handlePause();
         lastSpaceTime = millis();
