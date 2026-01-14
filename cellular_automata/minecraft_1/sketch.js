@@ -178,6 +178,8 @@ function setup() {
     });
     resetBtn.parent(container);
 
+    strokeWeight(0);
+
     fillBoard();
     frameRate(15);
 }

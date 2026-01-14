@@ -29,15 +29,15 @@ le "halo" jaune est fait avec des lignes et le "coeur" noir avec un simple cercl
 
 Contient des sketches p5.js pour le jeu de la vie de conway, des automates cellulaire et une génération de caverne avec minerais et différentes cellules
 
-Voici les fichiers :
+Voici les sous-dossiers :
 
--   `conway.js` : le fichier avec le jeu de la vie
--   `cavern.js` : le fichier avec la génération de caverne avancée
--   `cavern_textured_1.js` : le fichier avec la génération de caverne avancée
--   `cavern_textured_2.js` : le fichier avec la génération de caverne avancée MAIS réécrit par moi
--   `sketch.js` : une experimentation sur de la génération de caverne avec un motif particulier
+-   `conway` : le jeu de la vie
+-   `cavern_1` : une génération de caverne
+-   `cavern_2` : une experimentation sur de la génération de caverne avec un motif particulier
+-   `minecraft_1` : une génération de caverne avec de la coloration style "Minecraft"
+-   `minecraft_2` : une génération de caverne avec de la coloration style "Minecraft" MAIS réécrit par moi à 2h du matin
 
-> ⚠️ J'ai utilisé ChatGPT pour m'aider sur la génération des "minerais" car je suis (encore) très mauvais en probabilité sur le `cavern_better.js`
+> ⚠️ J'ai utilisé ChatGPT pour m'aider sur la génération des "minerais" car je suis (encore) très mauvais en probabilité sur le `minecraft_1`
 
 ## Digital Litterature
 
