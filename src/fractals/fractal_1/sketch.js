@@ -13,13 +13,13 @@ const UI = {
 let maxBranch = 8;
 let maxDepth = 7;
 let spawnRate = 50;
-let fadeTime = 0;
 let angleSpread = Math.PI / 4;
+let branchLength = 100;
 
 //not in slider
 let particleSize = 2;
 let branchSize = 1;
-let baseLength = 100;
+
 const START_HUE = 240; //blue at start
 const END_HUE = 0; //red at end
 
@@ -27,8 +27,8 @@ const END_HUE = 0; //red at end
 let numSlider;
 let depthSlider;
 let spawnRateSlider;
-let fadeSlider;
 let angleSlider;
+let lenSlider;
 
 //data
 let treeRoots = [];
@@ -50,15 +50,15 @@ function draw() {
     let newMaxBranch = numSlider.value();
     let newMaxDepth = depthSlider.value();
     let newSpawnRate = spawnRateSlider.value();
-    let newFadeTime = fadeSlider.value();
     let newAngleSpread = angleSlider.value();
+    let newBranchLength = lenSlider.value();
 
     if (
         maxBranch !== newMaxBranch ||
         maxDepth !== newMaxDepth ||
         spawnRate !== newSpawnRate ||
-        fadeTime != newFadeTime ||
-        angleSpread != newAngleSpread
+        angleSpread != newAngleSpread ||
+        branchLength != newBranchLength
     ) {
         treeRoots = [];
         particles = [];
@@ -66,14 +66,14 @@ function draw() {
         maxBranch = newMaxBranch;
         maxDepth = newMaxDepth;
         spawnRate = newSpawnRate;
-        fadeTime = newFadeTime;
         angleSpread = newAngleSpread;
+        branchLength = newBranchLength;
 
         clear();
         background(0);
     }
 
-    background(30, fadeTime);
+    background(30, 0);
     translate(width / 2, height / 2);
 
     drawUI();
@@ -103,11 +103,11 @@ function drawSliders() {
     spawnRateSlider.position(UI.marginX + UI.colSpacing * 2, UI.marginY);
 
     //row 1
-    fadeSlider = createSlider(0, 100, fadeTime, 1);
-    fadeSlider.position(UI.marginX, UI.marginY + UI.rowHeight);
-
     angleSlider = createSlider(0, PI / 2, angleSpread, 0.001);
-    angleSlider.position(UI.marginX + UI.colSpacing, UI.marginY + UI.rowHeight);
+    angleSlider.position(UI.marginX, UI.marginY + UI.rowHeight);
+
+    lenSlider = createSlider(0, 200, branchLength, 1);
+    lenSlider.position(UI.marginX + UI.colSpacing, UI.marginY + UI.rowHeight);
 }
 
 //draw the UI texts (using a flex-wrap like thing)
@@ -135,12 +135,12 @@ function drawUI() {
 
     //row 1
     text(
-        "Fade time: " + fadeTime,
+        "Branch angle: " + round(degrees(angleSpread)) + "°",
         UI.marginX - off.x,
         UI.marginY + UI.rowHeight - off.y
     );
     text(
-        "Branch angle: " + round(degrees(angleSpread)) + "°",
+        "Zoom: " + branchLength + "%",
         UI.marginX + UI.colSpacing - off.x,
         UI.marginY + UI.rowHeight - off.y
     );
@@ -152,7 +152,7 @@ function createTree() {
     for (let i = 0; i < maxBranch; i++) {
         let angle = (TWO_PI * i) / maxBranch;
         treeRoots.push(
-            createBranchTree(createVector(0, 0), baseLength, 0, angle)
+            createBranchTree(createVector(0, 0), branchLength, 0, angle)
         );
     }
     colorMode(RGB, 255, 255, 255);
