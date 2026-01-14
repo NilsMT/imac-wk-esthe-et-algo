@@ -12,7 +12,7 @@ Explorations de la génération de formes géométriques par des algorithmes pur
 
 ## Projets
 
-### **blackhole**
+### **blackhole** - Trou noir
 
 Visualisation d'un trou noir avec halo rayonnant en utilisant des formules trigonométriques.
 
@@ -22,7 +22,7 @@ L'algorithme est constitué de trois parties :
 -   La création du trou noir au centre
 -   La création des lignes horizontales (qui selon son éloignement avec l'horizon vois son point de départ s'écarter du centre)
 
-### **figure5 et lignes_epaisses**
+### **figure5 et lignes_epaisses** - Figures algorithmiques
 
 J'ai retranscrit le code de la figure 5 et de lignes_epaisses en y ajoutant une teinte dans le spectre chromatique avec l'espace de couleur HSB.
 

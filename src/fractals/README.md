@@ -1,6 +1,6 @@
 # Fractales
 
-Explorations de la génération de structures fractales auto-similaires utilisant la récursion et les algorithmes de ramification.
+Explorations de la génération de structures fractales auto-similaires utilisant la récursion.
 
 ## Structure
 
@@ -10,7 +10,7 @@ Explorations de la génération de structures fractales auto-similaires utilisan
 
 ## Projets
 
-### **fractal_1** - Arbre Fractal Récursif
+### **fractal_1** - Arbre fractal récursif
 
 Génération d'arbres fractals utilisant un algorithme d'arbre binaire récursif. Chaque branche se divise en deux sous-branches avec un angle configurable, créant une structure auto-similaire à plusieurs niveaux. Des particules animées parcourent l'arborescence en empruntant aléatoirement les chemins disponibles.
 
