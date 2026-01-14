@@ -99,7 +99,7 @@ function drawSliders() {
     depthSlider = createSlider(1, 8, maxDepth, 1);
     depthSlider.position(UI.marginX + UI.colSpacing, UI.marginY);
 
-    spawnRateSlider = createSlider(1, 250, spawnRate, 1);
+    spawnRateSlider = createSlider(0, 250, spawnRate, 1);
     spawnRateSlider.position(UI.marginX + UI.colSpacing * 2, UI.marginY);
 
     //row 1
