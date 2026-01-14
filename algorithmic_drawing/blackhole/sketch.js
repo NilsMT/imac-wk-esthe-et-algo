@@ -39,11 +39,13 @@ function drawBlackhole() {
     let radius = min(width, height) * 0.2;
     let length = 100;
 
+    //outer halo
+    stroke(255, 215, 0);
+
     for (let angle = 0; angle < TWO_PI; angle += TWO_PI / precision) {
         let endX = midX + Math.cos(angle) * radius;
         let endY = midY + Math.sin(angle) * radius;
 
-        stroke(255, 215, 0);
         line(midX, midY, endX, endY);
         line(
             endX,
@@ -53,10 +55,12 @@ function drawBlackhole() {
         );
     }
 
+    //center black hole
     fill(0);
     noStroke();
     ellipse(midX, midY, radius * 1.5);
 
+    //horizontal lines
     const range = Math.PI / 8;
     const maxOff = length;
 
@@ -66,8 +70,10 @@ function drawBlackhole() {
         let isNear0 = angle < range || angle > TWO_PI - range;
         let isNearPi = Math.abs(angle - Math.PI) < range;
 
+        //select only around pI
         if (!isNear0 && !isNearPi) continue;
 
+        //calculate difference from the center the closer to the edge of the range
         let centerAngle = isNearPi ? Math.PI : 0;
 
         let diff = Math.atan2(
@@ -80,9 +86,12 @@ function drawBlackhole() {
 
         let ox = Math.cos(angle) * off;
         let oy = Math.sin(angle) * off;
+        //
 
+        //offset that difference
         let startX = midX + ox;
         let startY = midY + oy;
+        //
 
         let endX = midX + Math.cos(angle) * radius;
         let endY = midY + Math.sin(angle) * radius;
