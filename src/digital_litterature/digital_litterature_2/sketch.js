@@ -1,11 +1,12 @@
 let config = {
+    TEXT: "",
     //UI Data
-    CANVAS_HEIGHT: 800, //TODO: make it vary from text
-    CANVAS_WIDTH: 800, //TODO: make it vary from text
     CELL_SIZE: 10,
-    TEXT: "oui",
     START_ORI: "x",
 };
+
+const outputElement = document.getElementById("output");
+const inputElement = document.getElementById("input");
 
 ////////////////////////////////
 //  JSON Dominos
@@ -40,6 +41,12 @@ function appendCharInRange(st, nd, json) {
         json[`${row}-${col}`] = String.fromCodePoint(i);
         sub_index++;
     }
+}
+
+//turn char to html entity so it display
+function charToHtmlEntity(char) {
+    const code = char.codePointAt(0);
+    return `&#${code};`; // decimal
 }
 
 //turn X-Y into XY
@@ -100,7 +107,7 @@ function giveAdequateDominos(code, json) {
             let choseSp = splitDominoValue(chosenKey);
 
             //add to result
-            result += json[chosenKey];
+            result += (ori === "x" ? "" : "<br>") + json[chosenKey];
             previousDomino = choseSp;
 
             //subtract choice, then reiterate
@@ -111,67 +118,55 @@ function giveAdequateDominos(code, json) {
         }
     }
 
-    console.warn("what wasnt expressed: " + code);
-
     //add end character (so everything can be played after)
-    result += SPE_DOMINOS[ori]["?-?"];
+    result += (ori === "x" ? "" : "<br>") + SPE_DOMINOS[ori]["?-?"];
     previousDomino = [-1, -1];
     return result;
-}
-
-////////////////////////////////
-//  Table
-////////////////////////////////
-
-function initTab() {
-    for (let i = 0; i < row; i++) {
-        table[i] = [];
-        for (let j = 0; j < col; j++) {
-            table[i][j] == 0;
-        }
-    }
 }
 
 ////////////////////////////////
 //  Base functions
 ////////////////////////////////
 
-let table = [];
-let row = Math.floor(config.CANVAS_HEIGHT / config.CELL_SIZE);
-let col = Math.floor(config.CANVAS_WIDTH / config.CELL_SIZE);
-let currentRow = 0;
-let currentCol = 0;
-
-function setup() {
-    createCanvas(config.CANVAS_HEIGHT, config.CANVAS_WIDTH);
-    frameRate(60);
-    background(0);
-
-    initTab();
-    initJson();
-
+function translate() {
+    //split the text to get each word
     let lst = config.TEXT.split(" ");
-    let result = "";
     let ori = config.START_ORI;
 
+    //loop over each word
     lst.forEach((word) => {
+        //translate the word into dominoes
         let adequateWord = word
             .split("")
             .map((char) => {
+                //translate each char of word
                 let code = char.charCodeAt(0);
-                let adequateDominos = giveAdequateDominos(code, DOMINOS[ori]);
-                return adequateDominos;
+                return giveAdequateDominos(code, DOMINOS[ori]);
             })
             .join("");
 
-        result += adequateWord;
-
         console.warn(word);
         console.log("%c" + adequateWord, "font-size: 24px");
+
+        outputElement.innerHTML += adequateWord + "<br>";
 
         //switch direction
         ori = ori === "x" ? "y" : "x";
     });
 }
 
-function draw() {}
+////////////////////////////////
+//  Main functions
+////////////////////////////////
+
+function main() {
+    initJson();
+
+    inputElement.addEventListener("input", (ev) => {
+        config.TEXT = ev.target.value;
+        outputElement.innerHTML = "";
+        translate();
+    });
+}
+
+main();

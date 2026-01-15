@@ -4,14 +4,24 @@
         <meta charset="utf-8" />
         <title>home/digital_litterature/digital_litterature_2</title>
         <link href="../../../css/sketch.css" rel="stylesheet" />
+        <link href="./index.css" rel="stylesheet" />
+        <meta charset="UTF-8" />
     </head>
     <body>
-        <a href="../index.html">< go back</a>
+        <p>Translate this</p>
+        <textarea
+            id="input"
+            oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'
+        ></textarea>
+        <p>Into</p>
+        <p class="domino" id="output"></p>
+
         <p class="rootlink">
             <a class="special" href="../../../index.html">home/</a>
             <a class="special" href="../index.html">digital_litterature/</a>
             <a class="special" href="./index.html">digital_litterature_2/</a>
         </p>
+        <a href="../index.html">< go back</a>
 
         <script src="../../../js/p5.min.js"></script>
         <script src="sketch.js"></script>
