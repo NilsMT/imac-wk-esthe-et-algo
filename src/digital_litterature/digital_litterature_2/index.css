@@ -12,6 +12,11 @@ body {
     min-height: 32px;
 }
 
+#output {
+    background-color: #1a891a;
+    color: #fff;
+}
+
 .domino {
     font-size: 32px;
     overflow: auto;

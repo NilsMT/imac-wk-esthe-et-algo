@@ -80,15 +80,9 @@ function wordValuation(word) {
         fullNum += String(c.charCodeAt(0));
     }
 
-    //manage case where its not even (because need it to be)
-    //fullNum = 123 ==> 1230
-    if (fullNum.length % 2 !== 0) {
-        fullNum += "0";
-    }
-
-    //explore every pair of char (0-99) and summ them
-    for (let i = 0; i < fullNum.length; i += 2) {
-        sum += Number(fullNum.slice(i, i + 2));
+    //fullNum = 1,2,3
+    for (const n in fullNum) {
+        sum += Number(n);
     }
 
     //word length to avoid repetition of pattern for two different word
@@ -166,14 +160,17 @@ function dominoChainWord(word, ori) {
 function dominoChainText(text) {
     let words = text.trim().split(/\s+/);
     let ori = config.START_ORI;
+    config.SPACING = 1; //reset spacing
 
     words.forEach((word) => {
-        let chain = dominoChainWord(word, ori);
+        if (word.length > 0) {
+            let chain = dominoChainWord(word, ori);
 
-        //render the chain
-        renderDominoChain(chain, ori);
-        //switch orientation
-        ori = ori === "x" ? "y" : "x";
+            //render the chain
+            renderDominoChain(chain, ori);
+            //switch orientation
+            ori = ori === "x" ? "y" : "x";
+        }
     });
 }
 
@@ -213,8 +210,6 @@ function renderDominoChain(chain, ori) {
             outputElement.innerHTML += dom + "<br>";
         });
     }
-    //clean output for dominos
-    console.log("%c" + dominoChain.join(""), "font-size: 24px");
 }
 
 ////////////////////////////////
