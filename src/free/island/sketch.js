@@ -1,43 +1,56 @@
 //config
 config = {
     CELL_SIZE: 5,
-    phases: [5, 1, 1],
     ROW: 250,
     COLUMN: 250,
     KEY_COOLDOWN: 250,
-    FRAMERATE: 60,
-    CELL_TYPE: {
-        0: {
+    FRAMERATE: 15,
+    NOISE_FREQUENCY: 5, //rise for more land and less water
+    CELL_TYPE: [
+        {
             name: "deep_water",
             color: [26, 95, 205],
         },
-        1: {
+        {
             name: "medium_water",
             color: [46, 115, 225],
         },
-        2: {
+        {
             name: "shallow_water",
             color: [66, 135, 245],
         },
-        3: {
-            name: "grass",
-            color: [60, 176, 68],
-        },
-        4: {
+        {
             name: "sand",
             color: [214, 211, 124],
         },
-        5: {
+        {
+            name: "grass",
+            color: [60, 176, 68],
+        },
+        {
+            name: "high_grass",
+            color: [20, 136, 28],
+        },
+        {
             name: "hill",
+            color: [71, 71, 71],
+        },
+        {
+            name: "moutain",
             color: [54, 54, 54],
         },
-    },
+        {
+            name: "snow",
+            color: [173, 173, 173],
+        },
+    ],
 };
 
 //autogenerate CELL_ID_BY_NAME
 let cellid = {};
-Object.keys(config.CELL_TYPE).map((k) => {
-    cellid[config.CELL_TYPE[k].name] = k;
+
+config.CELL_TYPE.map((cell, i) => {
+    cellid[i] = cell.name;
 });
 
 console.log(cellid);
@@ -46,17 +59,16 @@ console.log(cellid);
 let board = [];
 let row = config.ROW;
 let col = config.COLUMN;
-let phase;
 
+// Buttons
 let pauseBtn;
-let paused = true;
+let lastETime = 0;
+
+let resetBtn;
+let lastRTime = 0;
 
 let selectPaintBtn;
-let selectedPaint = 0;
-
-let frame = 0;
-let lastETime = 0;
-let lastRTime = 0;
+let lastATime = 0;
 
 // Camera/zoom/drag variables
 let camera = {
@@ -65,8 +77,14 @@ let camera = {
     zoom: 1,
 };
 
-let isDragging = false;
 let dragStart = { x: 0, y: 0 };
+
+//map status
+let isPaused = true;
+let isEdited = false;
+let isDragging = false;
+let isZoomed = false;
+let selectedPaint = 0;
 
 /////////////////////////////
 //        CELLS
@@ -101,40 +119,7 @@ function countAround(snapshot, i, j, criteria, range = 1) {
 }
 
 //smoothen out the island shapes
-function islandSmoothingRule(snapshot, i, j) {
-    const n = countAround(snapshot, i, j, (t) => t > cellid.shallow_water);
-
-    if (snapshot[i][j] > cellid.shallow_water) {
-        console.warn();
-        //wall survives if 4+ neighbors are walls
-        return n >= 4 ? cellid.grass : cellid.shallow_water;
-    } else {
-        //empty becomes wall if 5+ neighbors are walls
-        return n >= 5 ? cellid.grass : cellid.shallow_water;
-    }
-}
-
-//color cell near water as sand
-function islandSandRule(snapshot, i, j) {
-    if (snapshot[i][j] > cellid.shallow_water) {
-        const n = countAround(snapshot, i, j, (t) => t > cellid.shallow_water);
-        return n > 0 ? cellid.sand : snapshot[i][j];
-    }
-    return snapshot[i][j];
-}
-
-//color cell far from water as hill
-function islandHillRule(snapshot, i, j) {
-    if (snapshot[i][j] > cellid.shallow_water) {
-        const n = countAround(
-            snapshot,
-            i,
-            j,
-            (t) => t > cellid.shallow_water,
-            3
-        );
-        return n > 0 ? snapshot[i][j] : cellid.hill;
-    }
+function cellRules(snapshot, i, j) {
     return snapshot[i][j];
 }
 
@@ -142,44 +127,20 @@ function islandHillRule(snapshot, i, j) {
 //        BOARD MANAGEMENT
 /////////////////////////////
 
-function getActivePhase(frame, phases) {
-    for (let i = 0; i < phases.length; i++) {
-        if (frame < phases[i]) {
-            console.warn("this pahse is active: " + i);
-            return i; //current phase is active
-        }
-    }
-    return -1; //frame doesnt fit any phase
-}
-
 function updateBoard() {
-    if (paused) return;
+    if (isPaused) return;
 
-    const snapshot = board.map((r) => [...r]);
+    if (isEdited) {
+        isEdited = false; //TODO: determine how much iteration I need
 
-    const activePhase = getActivePhase(frame, phase);
+        const snapshot = board.map((r) => [...r]);
 
-    //determine the rule based on phase index
-    let rule =
-        activePhase === 0
-            ? islandSmoothingRule
-            : activePhase === 1
-            ? islandSandRule
-            : activePhase === 2
-            ? islandHillRule
-            : undefined;
-
-    if (activePhase !== -1 && rule !== undefined) {
         for (let i = 0; i < row; i++) {
             for (let j = 0; j < col; j++) {
-                if (rule) {
-                    board[i][j] = rule(snapshot, i, j);
-                }
+                board[i][j] = cellRules(snapshot, i, j);
             }
         }
     }
-
-    frame++; //increment frame AFTER processing
 }
 
 //render board
@@ -195,10 +156,12 @@ function renderBoard() {
 
             const r = cellRand(i, j);
             const shade = 0.8 + r * 0.2; // strong & visible
+            const color = [base[0] * shade, base[1] * shade, base[2] * shade];
 
-            fill(base[0] * shade, base[1] * shade, base[2] * shade);
+            fill(color);
 
-            noStroke();
+            strokeWeight(1);
+            stroke(color);
             rect(
                 j * config.CELL_SIZE,
                 i * config.CELL_SIZE,
@@ -211,20 +174,30 @@ function renderBoard() {
 }
 
 //function that init the matrix with 0
-function fillBoard(scale = 0.15, threshold = 0.5) {
+function fillBoard(frequency = 3) {
     board = [];
+
+    // get ordered CELL_TYPE indices (0,1,2,...)
+    const cellKeys = Object.keys(config.CELL_TYPE)
+        .map(Number)
+        .sort((a, b) => a - b);
+
+    const levels = cellKeys.length;
 
     for (let i = 0; i < row; i++) {
         board[i] = [];
         for (let j = 0; j < col; j++) {
-            //perlin noise value between 0 and 1
-            let n = noise(i * scale, j * scale);
-            //threshold determines if cell is grass or water
-            board[i][j] = n > threshold ? cellid.grass : cellid.shallow_water;
+            const nx = i / row;
+            const ny = j / col;
+
+            const n = noise(nx * frequency, ny * frequency); // 0..1
+
+            // map noise → index range
+            const idx = Math.min(levels - 1, Math.floor(n * levels));
+
+            board[i][j] = cellKeys[idx];
         }
     }
-
-    frame = 0;
 }
 
 /////////////////////////////
@@ -238,30 +211,18 @@ function cellRand(i, j) {
     return ((x ^ (x >> 16)) >>> 0) / 4294967296;
 }
 
-function buildPhases() {
-    let t = 0;
-    let arr = [];
-
-    for (i = 0; i < config.phases.length; i++) {
-        t += config.phases[i];
-        arr.push(t);
-    }
-
-    return arr;
-}
-
 function handlePause() {
-    if (!paused) {
-        paused = true;
-        pauseBtn.html("currently paused");
+    if (!isPaused) {
+        isPaused = true;
+        pauseBtn.html("paused");
     } else {
-        paused = false;
-        pauseBtn.html("currently looping");
+        isPaused = false;
+        pauseBtn.html("running");
     }
 }
 
 function handleReset() {
-    fillBoard();
+    fillBoard(config.NOISE_FREQUENCY);
 }
 
 function handlePaintCycle() {
@@ -282,16 +243,12 @@ function handlePaintCycle() {
 
 //setup
 function setup() {
-    phase = buildPhases();
-
-    console.log(phase);
-
-    createCanvas(config.CELL_SIZE * row + 5, config.CELL_SIZE * col + 5);
+    createCanvas(windowHeight * 0.9, windowHeight * 0.9);
 
     const container = createDiv();
     container.id("container");
 
-    pauseBtn = createButton("currently paused");
+    pauseBtn = createButton("paused");
     pauseBtn.mousePressed(handlePause);
     pauseBtn.parent(container);
 
@@ -303,7 +260,6 @@ function setup() {
     selectPaintBtn.mousePressed(handlePaintCycle);
     selectPaintBtn.parent(container);
 
-    fillBoard();
     frameRate(config.FRAMERATE);
 
     // Prevent context menu on canvas
@@ -312,13 +268,27 @@ function setup() {
             event.preventDefault();
         }
     });
+
+    //start board
+    fillBoard(config.NOISE_FREQUENCY);
+    background(0);
+    updateBoard();
+    renderBoard();
 }
 
 //update
 function draw() {
-    background(255);
-    renderBoard();
-    updateBoard();
+    let isMoved = isDragging || isZoomed;
+
+    if (isEdited) {
+        updateBoard();
+    }
+
+    if (isMoved || isEdited) {
+        isZoomed = false;
+        background(0);
+        renderBoard();
+    }
 
     if (keyIsDown(69) && millis() - lastETime > config.KEY_COOLDOWN) {
         //e
@@ -328,8 +298,14 @@ function draw() {
 
     if (keyIsDown(82) && millis() - lastRTime > config.KEY_COOLDOWN) {
         //r
-        fillBoard();
+        handleReset();
         lastRTime = millis();
+    }
+
+    if (keyIsDown(65) && millis() - lastATime > cooldown) {
+        //a
+        handlePaint();
+        lastATime = millis();
     }
 
     if (mouseIsPressed) {
@@ -347,8 +323,6 @@ function draw() {
 /////////////////////////////
 
 function handlePaint() {
-    handlePause(); //pause when drawing
-
     // Left click to paint cells
     let j = floor((mouseX + camera.x) / (config.CELL_SIZE * camera.zoom));
     let i = floor((mouseY + camera.y) / (config.CELL_SIZE * camera.zoom));
@@ -356,9 +330,8 @@ function handlePaint() {
     //out of bounds check
     if (i >= 0 && i < row && j >= 0 && j < col) {
         board[i][j] = selectedPaint;
+        isEdited = true;
     }
-
-    handlePause(); //unpause when drawing
 }
 
 function handleDrag() {
@@ -391,6 +364,7 @@ function mouseReleased() {
 }
 
 function mouseWheel(event) {
+    isZoomed = true;
     // Zoom in/out with mouse wheel
     const zoomSpeed = 0.1;
     const oldZoom = camera.zoom;
