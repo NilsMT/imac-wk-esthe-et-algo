@@ -205,9 +205,9 @@ function draw() {
         let j = floor(mouseX / cellSize);
         let i = floor(mouseY / cellSize);
 
-        // out of bounds check
+        //out of bounds check
         if (i >= 0 && i < row && j >= 0 && j < col) {
-            board[i][j] = 1; // or 0 depending on what you want
+            board[i][j] = 1;
         }
 
         frame = 0;

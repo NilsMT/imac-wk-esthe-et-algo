@@ -5,25 +5,21 @@ let board = [];
 
 let pauseBtn;
 let paused = true;
+
+let frameCount = 0;
 let lastETime = 0;
 let lastRTime = 0;
 const cooldown = 250; //ms
 
-let ruleset = {
-    survive: (n) => n >= 4, //stay as a wall
-    birth: (n) => n >= 5, //become a wall
-    die: (n) => n < 4, //die
-
-    /*
-    from https://www.roguebasin.com/index.php/Cellular_Automata_Method_for_Generating_Random_Cave-Like_Levels
-
-    a tile becomes a wall if it was a wall and 4 or more of its eight neighbors were walls, 
-    or if it was not a wall and 5 or more neighbors were. 
-
-    Put more succinctly, a tile is a wall if the 3x3 region centered on it contained at least 5 walls. 
-    Each iteration makes each tile more like its neighbors, and the amount of overall "noise" is gradually reduced:
-    */
-};
+function caveRule(snapshot, i, j, n) {
+    if (snapshot[i][j] !== 0) {
+        //wall survives if 4+ neighbors are walls
+        return n >= 3 ? 1 : 0;
+    } else {
+        //empty becomes wall if 5+ neighbors are walls
+        return n >= 5 ? 1 : 0;
+    }
+}
 
 //setup
 function setup() {
@@ -110,19 +106,17 @@ function countNeighbors(i, j) {
 function updateBoard() {
     if (paused) return;
 
-    let newBoard = [];
+    frameCount++;
+
+    const snapshot = board.map((r) => [...r]);
+
     for (let i = 0; i < row; i++) {
-        newBoard[i] = [];
         for (let j = 0; j < col; j++) {
-            let neighbors = countNeighbors(i, j);
-            if (board[i][j] === 1) {
-                newBoard[i][j] = ruleset.survive(neighbors) ? 1 : 0;
-            } else {
-                newBoard[i][j] = ruleset.birth(neighbors) ? 1 : 0;
-            }
+            let n = countNeighbors(i, j);
+
+            board[i][j] = caveRule(snapshot, i, j, n);
         }
     }
-    board = newBoard;
 }
 
 //render board
@@ -147,4 +141,6 @@ function fillBoard() {
             board[i][j] = Math.round(random(1));
         }
     }
+
+    frameCount = 0;
 }
