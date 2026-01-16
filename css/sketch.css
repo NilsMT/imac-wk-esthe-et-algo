@@ -19,6 +19,14 @@ body {
     gap: var(--gap);
 }
 
-body > * {
-    width: fit-content;
+/* config */
+
+.config-editor {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+}
+
+#configEditor {
+    width: 350px;
 }

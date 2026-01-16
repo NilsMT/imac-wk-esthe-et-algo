@@ -113,3 +113,29 @@ main(); //SETUP
 
 //RUN ONCE
 translateRandomQuote();
+
+////////////////////////////////
+//  Config customization
+////////////////////////////////
+
+const configEditor = document.getElementById("configEditor");
+const applyConfigBtn = document.getElementById("applyConfig");
+const resetConfigBtn = document.getElementById("resetConfig");
+
+//keep a clean copy
+const DEFAULT_CONFIG = JSON.parse(JSON.stringify(config));
+
+//init textarea
+configEditor.value = JSON.stringify(config, null, 2);
+
+//apply whatever is typed
+applyConfigBtn.addEventListener("click", () => {
+    config = JSON.parse(configEditor.value);
+    translate(inputElement.value);
+});
+
+//reset JSON
+resetConfigBtn.addEventListener("click", () => {
+    config = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+    configEditor.value = JSON.stringify(config, null, 2);
+});
