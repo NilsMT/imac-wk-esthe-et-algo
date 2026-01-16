@@ -15,7 +15,3 @@ body {
 .domino {
     font-size: 32px;
 }
-
-p:not(.rootlink) {
-    margin: 0;
-}

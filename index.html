@@ -7,21 +7,55 @@
     </head>
     <body>
         <main id="index">
-            <p class="rootlink">
-                <a class="special" href="./index.html">home/</a>
+            <p>
+                <h2>Informations</h2>
+                <ul>
+                    <li><a class="btn important">yellow buttons</a> are the most
+                    importants projects of each categories.</li>
+                    <li>Hover your mouse on button to see what they are about</li>
+                </ul>
+                <b>Enjoy !</b>
             </p>
-            <a href="./src/algorithmic_drawing/index.html">
-                algorithmic_drawing >
-            </a>
-            <a href="./src/cellular_automata/index.html">
-                cellular_automata >
-            </a>
-            <a href="./src/fractals/index.html"> fractals > </a>
-            <a href="./src/digital_litterature/index.html">
-                digital_litterature >
-            </a>
-            <a href="./src/free/index.html"> free > </a>
+
+            <p class="rootlink">
+                <a href="./index.html">home/</a>
+            </p>
+
+            <div class="button-container">
+                <a class="btn" href="./src/algorithmic_drawing/index.html">
+                    algorithmic_drawing >
+                </a>
+                <div class="tooltip">Day 1 - drawing with algorithms</div>
+            </div>
+            <div class="button-container">
+                <a class="btn" href="./src/cellular_automata/index.html">
+                    cellular_automata >
+                </a>
+                <div class="tooltip">
+                    Day 2 - playing with cellular automata (like the game of
+                    life)
+                </div>
+            </div>
+            <div class="button-container">
+                <a class="btn" href="./src/fractals/index.html"> fractals > </a>
+                <div class="tooltip">
+                    Day 3 - playing with fractals and doing something with them
+                </div>
+            </div>
+            <div class="button-container">
+                <a class="btn" href="./src/digital_litterature/index.html">
+                    digital_litterature >
+                </a>
+                <div class="tooltip">
+                    Day 4 - playing with words and rendering them in a fancy way
+                </div>
+            </div>
+            <div class="button-container">
+                <a class="btn" href="./src/free/index.html"> free > </a>
+                <div class="tooltip">Day 5 - doing whatever I want :D</div>
+            </div>
         </main>
         <script src="./js/crawler.js" data-target="./src"></script>
+        <script src="./js/base.js"></script>
     </body>
 </html>

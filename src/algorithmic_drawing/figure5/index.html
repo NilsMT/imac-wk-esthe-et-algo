@@ -6,13 +6,50 @@
         <link href="../../../css/sketch.css" rel="stylesheet" />
     </head>
     <body>
-        <a href="../index.html">< go back</a>
-
-        <p class="rootlink">
-            <a class="special" href="../../../index.html">home/</a>
-            <a class="special" href="../index.html">algorithmic_drawing/</a>
-            <a class="special" href="./index.html">figure5/</a>
-        </p>
+        <a class="btn back" href="../index.html">< go back</a>
+        
+        <section class="explaination">
+            <h2>How does that work ?</h2>
+            <p>
+                The following GFA BASIC for Atari ST code was translated in
+                p5.js :
+                <p class="codeblock">
+                    Cls<br>
+                    Graphmode 3<br>
+                    A=Xrsl%/2<br>
+                    B=Yrsl%/2<br>
+                    '<br>
+                    For I=1 To 11<br>
+                    R=Yrsl%*0.7<br>
+                    For W=Pi/4 To 3.6 Step 0.05<br>
+                        X=R*Cos(W)<br>
+                        Y=R*Sin(W)<br>
+                        Line A+X,B-Y,A-Y,B-X<br>
+                        Line A-Y,B-X,A-X,B+X<br>
+                        Line A-X,B+Y,A+X,B-Y<br>
+                        Line A-X,B+Y,A+Y,B+X<br>
+                        Line A+X,B+X,A+X,B-Y<br>
+                        R=R*0.94<br>
+                    Next W<br>
+                    '<br>
+                    R=R/0.94<br>
+                    For W=3.6 To Pi/4 Step -0.05<br>
+                        X=R*Cos(W)<br>
+                        Y=R*Sin(W)<br>
+                        Line A+X,B-Y,A-Y,B-X<br>
+                        Line A-Y,B-X,A-X,B+X<br>
+                        Line A-X,B+Y,A+X,B-Y<br>
+                        Line A-X,B+Y,A+Y,B+X<br>
+                        Line A+X,B+X,A+X,B-Y<br>
+                        R=R/0.94<br>
+                    Next W<br>
+                    Next I<br>
+                    '<br>
+                    Pause 100<br>
+                </p>
+                I then added rainbow colors using the <a href="https://en.wikipedia.org/wiki/HSB">HSB Color space</a>
+            </p>
+        </section>
 
         <script src="../../../js/p5.min.js"></script>
         <script src="sketch.js"></script>

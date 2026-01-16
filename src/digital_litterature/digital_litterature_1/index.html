@@ -17,26 +17,25 @@
 
         <button id="regen">Another random text !</button>
 
-        <h2>How does that work ?</h2>
-        <p>
-            You probably know how characters have a code (ASCII or UNICODE).<br />
-            Well I take that code and transform it into dominos according to
-            "the highest substractable dominos is added to the translation of a
-            character".<br />
-            Which mean <b>a</b>, having the UNICODE <b>97</b>, will be expressed
-            as <b>(12*2)*4 + 1 = <span class="domino">🁡🁡🁡🁡🁤</span></b
-            ><br />
-            Also <b>[space]</b> is represented as
-            <span class="domino">🁣</span> and end of character as
-            <span class="domino">🁢</span>
-        </p>
+        <section class="explaination">
+            <h2>How does that work ?</h2>
+            <p>
+                You probably know how characters have a code (ASCII or
+                UNICODE).<br />
+                Well I take that code and transform it into dominos according to
+                "the highest substractable dominos is added to the translation
+                of a character".<br />
+                Which mean <b>a</b>, having the UNICODE <b>97</b>, will be
+                expressed as
+                <b>(12*2)*4 + 1 = <span class="domino">🁡🁡🁡🁡🁤</span></b
+                ><br />
+                Also <b>[space]</b> is represented as
+                <span class="domino">🁣</span> and end of character as
+                <span class="domino">🁢</span>
+            </p>
+        </section>
 
-        <p class="rootlink">
-            <a class="special" href="../../../index.html">home/</a>
-            <a class="special" href="../index.html">digital_litterature/</a>
-            <a class="special" href="./index.html">digital_litterature_1/</a>
-        </p>
-        <a href="../index.html">< go back</a>
+        <a class="btn back" href="../index.html">< go back</a>
 
         <script src="../../../js/p5.min.js"></script>
         <script src="sketch.js"></script>

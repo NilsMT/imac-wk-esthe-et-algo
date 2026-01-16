@@ -6,13 +6,26 @@
         <link href="../../../css/sketch.css" rel="stylesheet" />
     </head>
     <body>
-        <a href="../index.html">< go back</a>
+        <a class="btn back" href="../index.html">< go back</a>
 
-        <p class="rootlink">
-            <a class="special" href="../../../index.html">home/</a>
-            <a class="special" href="../index.html">cellular_automata/</a>
-            <a class="special" href="./index.html">minecraft_2/</a>
-        </p>
+        <section class="explaination">
+            <h2>How does that work ?</h2>
+            <p>
+                So the
+                <a
+                    href="https://www.roguebasin.com/index.php/Cellular_Automata_Method_for_Generating_Random_Cave-Like_Levels"
+                >
+                    cavern cellular automata</a
+                >.<br />
+                Then grass and dirt will spawn according to the height and the
+                surrounding. <br />
+                Then ores will spawn and expand based on probabilities and
+                following their spawning range.<br />
+                Compared to the other one, the overall ore distribution and
+                dirt/stone mixing is not because I tried to do it myself instead
+                of with IA (which the first one did)
+            </p>
+        </section>
 
         <script src="../../../js/p5.min.js"></script>
         <script src="sketch.js"></script>

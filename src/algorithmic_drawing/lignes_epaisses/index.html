@@ -6,13 +6,32 @@
         <link href="../../../css/sketch.css" rel="stylesheet" />
     </head>
     <body>
-        <a href="../index.html">< go back</a>
+        <a class="btn back" href="../index.html">< go back</a>
 
-        <p class="rootlink">
-            <a class="special" href="../../../index.html">home/</a>
-            <a class="special" href="../index.html">algorithmic_drawing/</a>
-            <a class="special" href="./index.html">lignes_epaisses/</a>
-        </p>
+        <section class="explaination">
+            <h2>How does that work ?</h2>
+            <p>
+                The following GFA BASIC for Atari ST code was translated in
+                p5.js :
+                <p class="codeblock">
+                    N=0<br>
+                    X=Xrsl%<br>
+                    Y=Yrsl%<br>
+                    '<br>
+                    Repeat<br>
+                    D=D+1<br>                    
+                    Defline 1,D<br>
+                    N=N+D+1<br>
+                    X=X-D-10<br>        
+                    Y=Y-D-10<br>
+                    Draw N,N To N,Y To X,Y To X,N To N,N<br>
+                    Until N>=Y<br>
+                    '<br>
+                    Pause 100<br>
+                </p>
+            </p>
+        </section>
+        I then added rainbow colors using the <a href="https://en.wikipedia.org/wiki/HSB">HSB Color space</a>
 
         <script src="../../../js/p5.min.js"></script>
         <script src="sketch.js"></script>

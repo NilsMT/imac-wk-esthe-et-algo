@@ -19,11 +19,11 @@ function setup() {
     const container = createDiv();
     container.id("container");
 
-    pauseBtn = createButton("currently paused");
+    pauseBtn = createButton("⏸ (T)");
     pauseBtn.mousePressed(handlePause);
     pauseBtn.parent(container);
 
-    let resetBtn = createButton("reset board");
+    let resetBtn = createButton("Reset (R)");
     resetBtn.mousePressed(function () {
         fillBoard();
     });
@@ -41,7 +41,7 @@ function draw() {
     renderBoard();
     updateBoard();
 
-    if (keyIsDown(69)) {
+    if (keyIsDown(84)) {
         //e to pause
         handlePause();
     }
@@ -50,10 +50,10 @@ function draw() {
 function handlePause() {
     if (!paused) {
         paused = true;
-        pauseBtn.html("currently paused");
+        pauseBtn.html("⏸ (T)");
     } else {
         paused = false;
-        pauseBtn.html("currently looping");
+        pauseBtn.html("► (T)");
     }
 }
 

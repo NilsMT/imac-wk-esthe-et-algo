@@ -1,17 +1,29 @@
 :root {
-    --gap: 5px;
+    --gap: 10px;
     --border: 2px;
-    --padding: 5px;
+    --padding: 10px;
+    --radius: 10px;
+    --text-size: 16px;
 
     font-family: "Courier New", Courier, monospace;
-    font-size: 16px;
+    font-size: var(--text-size);
 }
 
 body {
     background: #d0d0d0;
+    padding: var(--padding);
 }
 
-a:not(.special),
+p {
+    margin: 0;
+}
+
+h2 {
+    margin: 0;
+}
+
+/* Button */
+.btn,
 button {
     background: #b0b0b0;
     padding: var(--padding);
@@ -19,20 +31,88 @@ button {
     text-decoration: none;
     border: #000 solid var(--border);
 
+    display: inline-block;
+
     width: fit-content;
 
     box-sizing: border-box;
 }
 
-a:not(.special):hover,
+.btn:hover,
 button:hover {
     filter: brightness(0.75);
     border-style: dotted;
     cursor: pointer;
 }
 
+/* button color */
+
+.important {
+    background-color: rgb(238, 255, 0) !important;
+}
+
+.back {
+    background-color: rgb(0, 0, 0) !important;
+    color: #fff;
+}
+
+/* root link */
+
 .rootlink {
     gap: 0;
     display: flex;
     flex-direction: row;
+}
+
+.rootlink > * {
+    width: fit-content;
+}
+
+/* Tooltip */
+.button-container {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+}
+
+.tooltip {
+    position: fixed;
+    background-color: #000;
+    color: #fff;
+    padding: var(--padding);
+    border-radius: var(--radius);
+    font-size: var(--text-size);
+    white-space: nowrap;
+    z-index: 10;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+}
+
+.tooltip.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.tooltip::before {
+    content: "";
+    position: absolute;
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 5px solid transparent;
+    border-right-color: #000;
+}
+
+/* explaination */
+.explaination {
+    flex-direction: column;
+}
+
+/* codeblock */
+.codeblock {
+    background-color: #444;
+    color: #fff;
+    padding: var(--padding);
 }

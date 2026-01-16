@@ -11,14 +11,14 @@ let config = {
     CELL_TYPE: [
         { id: 0, name: "EMPTY", color: [150, 200, 255] },
         { id: 1, name: "GRASS", color: [21, 194, 50] },
-        { id: 2, name: "DIRT", color: [119, 69, 19] },
+        { id: 2, name: "DIRT", color: [119, 84, 19] },
         { id: 3, name: "STONE", color: [112, 128, 144], range: { min: 16 } },
 
         //common ores
         {
             id: 4,
             name: "COAL",
-            color: [54, 69, 79],
+            color: [54, 84, 79],
             range: { min: 16, max: 90 },
             spawnRate: 0.005,
             veinSize: 12,
@@ -115,7 +115,7 @@ let stoneTreshhold = [];
 
 let pauseBtn;
 let paused = true;
-let lastETime = 0;
+let lastTTime = 0;
 let lastRTime = 0;
 const cooldown = 250; //ms
 
@@ -155,11 +155,11 @@ function setup() {
     const container = createDiv();
     container.id("container");
 
-    pauseBtn = createButton("currently paused");
+    pauseBtn = createButton("⏸ (T)");
     pauseBtn.mousePressed(handlePause);
     pauseBtn.parent(container);
 
-    let resetBtn = createButton("reset board");
+    let resetBtn = createButton("Reset (R)");
     resetBtn.mousePressed(function () {
         resetBoard();
     });
@@ -174,10 +174,10 @@ function setup() {
 //update
 function draw() {
     //key input
-    if (keyIsDown(69) && millis() - lastETime > cooldown) {
+    if (keyIsDown(84) && millis() - lastTTime > cooldown) {
         //e
         handlePause();
-        lastETime = millis();
+        lastTTime = millis();
     }
 
     if (keyIsDown(82) && millis() - lastRTime > cooldown) {
@@ -208,10 +208,10 @@ function draw() {
 function handlePause() {
     if (!paused) {
         paused = true;
-        pauseBtn.html("currently paused");
+        pauseBtn.html("⏸ (T)");
     } else {
         paused = false;
-        pauseBtn.html("currently looping");
+        pauseBtn.html("► (T)");
     }
 }
 

@@ -6,13 +6,23 @@
         <link href="../../../css/sketch.css" rel="stylesheet" />
     </head>
     <body>
-        <a href="../index.html">< go back</a>
+        <a class="btn back" href="../index.html">< go back</a>
 
-        <p class="rootlink">
-            <a class="special" href="../../../index.html">home/</a>
-            <a class="special" href="../index.html">cellular_automata/</a>
-            <a class="special" href="./index.html">conway/</a>
-        </p>
+        <section class="explaination">
+            <h2>How does that work ?</h2>
+            <p>
+                It work with the
+                <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life">
+                    Game Of Life cellular automata
+                </a><br>
+                It work like that :
+                <ul>
+                    <li>Any live cell with fewer than two ore more than three live neighbours dies</li>
+                    <li>Any live cell with two or three live neighbours lives</li>
+                    <li>Any dead cell with exactly three live neighbours becomes a live cell</li>
+                </ul>
+            </p>
+        </section>
 
         <script src="../../../js/p5.min.js"></script>
         <script src="sketch.js"></script>

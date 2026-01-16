@@ -295,7 +295,7 @@ function handlePaintCycle(isReverse) {
 }
 
 function updatePauseBtnStyle() {
-    pauseBtn.html(isPaused ? "► (T)" : "⏸ (T)");
+    pauseBtn.html(isPaused ? "⏸ (T)" : "► (T)");
 }
 
 function updatePaintBtnStyle() {

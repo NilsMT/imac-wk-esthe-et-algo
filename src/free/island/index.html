@@ -7,13 +7,28 @@
         <link href="./index.css" rel="stylesheet" />
     </head>
     <body>
-        <a href="../index.html">< go back</a>
+        <a class="btn" href="../index.html">< go back</a>
 
-        <p class="rootlink">
-            <a class="special" href="../../../index.html">home/</a>
-            <a class="special" href="../index.html">free/</a>
-            <a class="special" href="./index.html">island/</a>
-        </p>
+        <section class="explaination">
+            <h2>Informations</h2>
+            <p>
+                You can drag the mouse with right click, and place cell with
+                left click
+            </p>
+            <h2>How does that work ?</h2>
+            <p>
+                So the
+                <a href="https://en.wikipedia.org/wiki/Perlin_noise">
+                    Perlin noise
+                </a>
+                is used to generate the islands.<br />
+                As it generate values between 0 and 1 cells begin, using
+                probability to fit their allocated space or less, to be typed
+                depending on those values.<br />
+                Also a random shading noise is added to make that texture on the
+                map.
+            </p>
+        </section>
 
         <script src="../../../js/p5.min.js"></script>
         <script src="sketch.js"></script>

@@ -25,7 +25,3 @@ body {
 .invisible {
     color: transparent;
 }
-
-p:not(.rootlink) {
-    margin: 0;
-}

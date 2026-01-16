@@ -16,4 +16,9 @@
 body {
     display: flex;
     flex-direction: column-reverse;
+    gap: var(--gap);
+}
+
+body > * {
+    width: fit-content;
 }

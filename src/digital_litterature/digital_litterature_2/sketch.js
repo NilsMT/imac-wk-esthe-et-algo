@@ -1,5 +1,5 @@
 let config = {
-    TEXT: "",
+    TEXT: "Hello",
     //UI Data
     CELL_SIZE: 10,
     START_ORI: "x",
@@ -231,14 +231,14 @@ function mulberry32(seed) {
 function main() {
     initJson();
 
+    //trigger once
+    inputElement.value = config.TEXT;
+    dominoChainText(config.TEXT);
+
     inputElement.addEventListener("input", (ev) => {
         config.TEXT = ev.target.value;
         outputElement.innerHTML = "";
-
-        //TEST
-        let t = dominoChainText(config.TEXT);
-
-        //translate();
+        dominoChainText(config.TEXT);
     });
 }
 
