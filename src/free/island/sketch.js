@@ -456,37 +456,41 @@ function mouseReleased() {
 }
 
 function mouseWheel(event) {
+    // check if mouse is inside canvas
+    if (mouseX < 0 || mouseX > width || mouseY < 0 || mouseY > height) {
+        return true; // allow page scroll
+    }
+
     isZoomed = true;
-    // Zoom in/out with mouse wheel
+
     const zoomSpeed = 0.1;
     const oldZoom = camera.zoom;
 
-    // Calculate minimum zoom to show entire board
     const minZoomX = width / (col * config.CELL_SIZE);
     const minZoomY = height / (row * config.CELL_SIZE);
     const minZoom = min(minZoomX, minZoomY);
 
-    // Scroll down = zoom out, scroll up = zoom in
     if (event.delta > 0) {
         camera.zoom = max(minZoom, camera.zoom - zoomSpeed);
     } else {
         camera.zoom = min(4, camera.zoom + zoomSpeed);
     }
 
-    // Adjust camera position to zoom towards mouse
+    if (camera.zoom === oldZoom) {
+        return true; // no zoom change → let page scroll
+    }
+
     const mouseWorldX = (mouseX + camera.x) / oldZoom;
     const mouseWorldY = (mouseY + camera.y) / oldZoom;
 
     camera.x = mouseWorldX * camera.zoom - mouseX;
     camera.y = mouseWorldY * camera.zoom - mouseY;
 
-    // Constrain camera to board boundaries
     const maxX = max(0, col * config.CELL_SIZE * camera.zoom - width);
     const maxY = max(0, row * config.CELL_SIZE * camera.zoom - height);
 
     camera.x = constrain(camera.x, 0, maxX);
     camera.y = constrain(camera.y, 0, maxY);
 
-    // Prevent default scrolling
-    return false;
+    return false; // consume scroll
 }

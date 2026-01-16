@@ -14,12 +14,20 @@ body {
     padding: var(--padding);
 }
 
+/* Text margins */
+
 p {
     margin: 0;
 }
 
 h2 {
     margin: 0;
+}
+
+/* Canvas */
+
+canvas {
+    border: solid var(--border) #000;
 }
 
 /* Button */

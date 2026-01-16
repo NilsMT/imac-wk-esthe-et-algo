@@ -7,7 +7,7 @@ function setup() {
     createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
 
     precisionSlider = createSlider(0, 1500, 1500, 5);
-    precisionSlider.position(10, 40);
+    precisionSlider.position(30, 50);
 }
 
 function draw() {

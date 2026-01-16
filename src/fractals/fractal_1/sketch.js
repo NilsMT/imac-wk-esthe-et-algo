@@ -5,9 +5,11 @@ let config = {
     CANVAS_WIDTH: 800,
     UI: {
         marginX: 20, //left-right margin
-        marginY: 30, //top-bottom margin
+        marginY: 40, //top-bottom margin
         rowHeight: 50, //vertical spacing between rows
         colSpacing: 150, //horizontal spacing between sliders
+        textHeight: 25,
+        textXOffset: 15,
     },
 
     //change \w slider
@@ -141,8 +143,8 @@ function drawUI() {
     noStroke();
 
     const off = {
-        x: width / 2,
-        y: height / 2 + 10,
+        x: width / 2 + config.UI.textXOffset,
+        y: height / 2 + config.UI.textHeight,
     };
 
     //row 0
