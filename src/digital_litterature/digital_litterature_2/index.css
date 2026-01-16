@@ -17,6 +17,10 @@ body {
     overflow: auto;
 }
 
+.invisible {
+    color: transparent;
+}
+
 p:not(.rootlink) {
     margin: 0;
 }
