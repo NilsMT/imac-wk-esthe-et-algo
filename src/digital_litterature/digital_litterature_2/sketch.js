@@ -3,6 +3,10 @@ let config = {
     //UI Data
     CELL_SIZE: 10,
     START_ORI: "x",
+
+    //the bigger the more dominos
+    MAX_VALUATION: 300,
+    SPACING: 0,
 };
 
 const outputElement = document.getElementById("output");
@@ -12,16 +16,8 @@ const inputElement = document.getElementById("input");
 //  ADDITIONAL STUFF
 ////////////////////////////////
 
-//https://github.com/cprosche/mulberry32 deterministic random with seed
-function mulberry32(seed) {
-    let t = (seed += 0x6d2b79f5);
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-}
-
 ////////////////////////////////
-//  JSON Dominos
+//  Dominos JSON creation
 ////////////////////////////////
 
 const DOMINOS = {
@@ -29,169 +25,208 @@ const DOMINOS = {
     x: {},
 };
 
-const SPE_DOMINOS = {
-    y: {
-        "?-?": "🁢",
-    },
-    x: {
-        "?-?": "🀰",
-    },
+const BLANK_DOMINO = {
+    y: "🁢",
+    x: "🀰",
 };
 
 //random at start
-let previousDomino = [-1, -1];
+let previousDomino = "-1";
+let previousWordFirstDomino = "-1";
 
 //fill the json
 function initJson() {
     //add dominoes
-    appendCharInRange(0x1f031, 0x1f061, DOMINOS.x); //127025–127073 UNICODE range
-    appendCharInRange(0x1f063, 0x1f093, DOMINOS.y); //127075–127123 UNICODE range
+    appendCharInRange(0x1f032, 0x1f061, DOMINOS.x); //127026–127073 UNICODE range
+    appendCharInRange(0x1f064, 0x1f093, DOMINOS.y); //127076–127123 UNICODE range
 
+    DOMINOS.x["-1"] = "🀰";
+    DOMINOS.y["-1"] = "🁢";
     console.log(DOMINOS);
-    console.log(SPE_DOMINOS);
 }
 
 //return the list of char included in the range
 function appendCharInRange(st, nd, json) {
-    let sub_index = 0;
+    let sub_index = 1;
     for (let i = st; i <= nd; i++) {
-        //UNICODE dominos order goes 0-0, 0-1, ... 6-6
+        //UNICODE dominos order goes 0-1, 0-0, ... 6-6
         const row = Math.floor(sub_index / 7);
         const col = sub_index % 7;
 
         //name objet accordingly "X-Y"
-        json[`${row}-${col}`] = String.fromCodePoint(i);
+        json[`${row}${col}`] = String.fromCodePoint(i);
         sub_index++;
     }
 }
 
-//turn X-Y into XY
-function getDominoValue(k) {
-    return Number(k.replace("-", ""));
+//function that give domino keys, excluding -1
+function getDominosKeys(ori) {
+    let keys = Object.keys(DOMINOS[ori]);
+
+    return keys.filter((k) => k != "-1");
 }
 
-//turn X-Y into [X,Y]
-function splitDominoValue(k) {
-    return k.split("-").map((m) => Number(m));
-}
+////////////////////////////////
+//  Domino generation
+////////////////////////////////
 
-//val, json is the selected set of dominos
-function giveDominos(val, json) {
-    let ori = json["0-0"] === DOMINOS["x"]["0-0"] ? "x" : "y";
-    let keys = Object.keys(json);
-    let result = [];
+//generate a value based on the word
+function wordValuation(word) {
+    let fullNum = "";
+    let sum = 0;
 
-    //loop until no more to give
-    while (val > 0) {
-        //stop if previous domino is [0,0]
-        if (previousDomino[0] === 0 && previousDomino[1] === 0) {
-            break;
-        }
-
-        //initialize previousDomino if it's the joker state
-        if (previousDomino[0] === -1 && previousDomino[1] === -1) {
-            previousDomino = [0, val % 7];
-        }
-
-        // select subtraction candidates
-        let playableCandidates = keys.filter((k) => {
-            let sp = splitDominoValue(k); //[start, end]
-            let canBePlayed = sp[0] === previousDomino[1] && k != "0-0"; //must match previous domino's end
-
-            return canBePlayed;
-        });
-        let candidates = playableCandidates.filter((k) => {
-            let nval = getDominoValue(k); //X*10 + Y
-            return nval <= val; //can this domino fit numerically?
-        });
-
-        if (candidates.length > 0) {
-            //choose one of them at random
-            let choice = Math.floor(mulberry32(val) * candidates.length);
-            let chosenKey = candidates[choice];
-
-            let choseVal = getDominoValue(chosenKey);
-            let choseSp = splitDominoValue(chosenKey);
-
-            //add to result
-            result.push(json[chosenKey]);
-            previousDomino = choseSp;
-
-            //subtract choice, then reiterate
-            val -= choseVal;
-        } else {
-            let choice = Math.floor(
-                mulberry32(val) * playableCandidates.length
-            );
-            let chosenKey = playableCandidates[choice];
-            let choseSp = splitDominoValue(chosenKey);
-
-            //add to result
-            result.push(json[chosenKey]);
-            previousDomino = choseSp;
-            break;
-        }
+    //word = ab, a = 111, b = 112, fullNum = 111112
+    for (const c of word) {
+        fullNum += String(c.charCodeAt(0));
     }
-    return result;
+
+    //manage case where its not even (because need it to be)
+    //fullNum = 123 ==> 1230
+    if (fullNum.length % 2 !== 0) {
+        fullNum += "0";
+    }
+
+    //explore every pair of char (0-99) and summ them
+    for (let i = 0; i < fullNum.length; i += 2) {
+        sum += Number(fullNum.slice(i, i + 2));
+    }
+
+    //word length to avoid repetition of pattern for two different word
+    //+10 to avoid emptiness
+    return sum + 10 + word.length;
+}
+
+//pick a random keys of JSON
+function pickRandomKey(seed, keys) {
+    return keys[Math.floor(mulberry32(seed) * keys.length)];
+}
+
+//give dominos that can be played regarding previous or/and next
+function getPlayableDominoKeys(previous = null, next = null, ori) {
+    const keys = getDominosKeys(ori);
+
+    return keys.filter(
+        (k) =>
+            (previous != null ? previous == k[0] : true) &&
+            (next != null ? next == k[1] : true)
+    );
+}
+
+function dominoChain(value, ori) {
+    chain = [];
+
+    value %= config.MAX_VALUATION;
+
+    //update previous domino (in case its a -1)
+    if (previousDomino == "-1") {
+        //generate a random one (pseudo random based on value)
+        const keys = getDominosKeys(ori);
+        previousDomino = pickRandomKey(value, keys);
+    }
+
+    //generate a domino chain according to the valuation
+    while (value > 0) {
+        //get dominos that connect to previously played one
+        let candidatesKeys = getPlayableDominoKeys(
+            previousDomino[1],
+            null,
+            ori
+        );
+
+        //get the one that by substracting won't exceed value
+        let safeCandidatesKeys = candidatesKeys.filter(
+            (k) => Number(k) <= value
+        );
+
+        //fill if empty
+        if (safeCandidatesKeys.length === 0) {
+            //choose the one you can play as those who exceed
+            safeCandidatesKeys = candidatesKeys;
+        }
+
+        //choose random one
+        let choice = pickRandomKey(value, safeCandidatesKeys);
+
+        //play it
+        previousDomino = choice;
+        value -= Number(choice);
+
+        //add it to the chain
+        chain.push(choice);
+    }
+
+    return chain;
+}
+
+function dominoChainWord(word, ori) {
+    const v = wordValuation(word);
+    return dominoChain(v, ori);
+}
+
+function dominoChainText(text) {
+    let words = text.trim().split(/\s+/);
+    let ori = config.START_ORI;
+
+    words.forEach((word) => {
+        let chain = dominoChainWord(word, ori);
+
+        //render the chain
+        renderDominoChain(chain, ori);
+        //switch orientation
+        ori = ori === "x" ? "y" : "x";
+    });
+}
+
+function renderDominoChain(chain, ori) {
+    let oldSpacing = config.SPACING;
+
+    //handle spacing going back (= inverse the chain)
+    if (config.SPACING >= chain.length && ori === "x") {
+        config.SPACING -= chain.length - 1;
+
+        //reverse the chain AND rotate each domino
+        chain = chain.reverse().map((k) => {
+            return k[1] + k[0];
+        });
+    }
+
+    //render the text of domino
+    let dominoChain = chain.map((k) => {
+        return DOMINOS[ori][k];
+    });
+
+    let dominoSpace = `<span class="invisible">
+            ${BLANK_DOMINO.x.repeat(config.SPACING)}
+        </span>`;
+
+    if (ori === "x") {
+        outputElement.innerHTML += dominoSpace;
+        outputElement.innerHTML += dominoChain.join("") + "<br>";
+
+        //handle spacing going forward
+        if (oldSpacing == config.SPACING) {
+            config.SPACING += dominoChain.length - 1;
+        }
+    } else {
+        dominoChain.forEach((dom) => {
+            outputElement.innerHTML += dominoSpace;
+            outputElement.innerHTML += dom + "<br>";
+        });
+    }
+    //clean output for dominos
+    console.log("%c" + dominoChain.join(""), "font-size: 24px");
 }
 
 ////////////////////////////////
 //  Base functions
 ////////////////////////////////
 
-function wordValuation(word) {
-    let r = mulberry32(word.length);
-    let res = Math.floor(r * 10 * word.length) + (word.length % 66);
-    console.log(res);
-    return res;
-}
-
-function translate() {
-    //split the text to get each word
-    let lst = config.TEXT.split(new RegExp("\\s+"));
-    let ori = config.START_ORI;
-    let spacing = 1;
-    let oldSpacing = 1;
-
-    //loop over each word
-    lst.forEach((word) => {
-        if (word.length > 0) {
-            //translate the word into dominoes
-            let dominosList = giveDominos(wordValuation(word), DOMINOS[ori]);
-
-            //handle spacing
-            oldSpacing = spacing;
-
-            if (spacing >= dominosList.length && ori === "x") {
-                spacing -= dominosList.length - 1;
-            }
-
-            let dominosSpace = `<span class="invisible">
-            ${SPE_DOMINOS.x["?-?"].repeat(spacing)}
-        </span>`;
-            //
-
-            if (ori === "x") {
-                outputElement.innerHTML += dominosSpace;
-                outputElement.innerHTML += dominosList.join("") + "<br>";
-
-                //handle spacing change
-                if (oldSpacing == spacing) {
-                    spacing += dominosList.length - 1;
-                }
-            } else {
-                dominosList.forEach((dom) => {
-                    outputElement.innerHTML += dominosSpace;
-                    outputElement.innerHTML += dom + "<br>";
-                });
-            }
-            //clean output for dominos
-            console.log("%c" + dominosList.join(""), "font-size: 24px");
-
-            //switch direction
-            ori = ori === "x" ? "y" : "x";
-        }
-    });
+//https://github.com/cprosche/mulberry32 deterministic random with seed
+function mulberry32(seed) {
+    let t = (seed += 0x6d2b79f5);
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
 }
 
 ////////////////////////////////
@@ -204,7 +239,11 @@ function main() {
     inputElement.addEventListener("input", (ev) => {
         config.TEXT = ev.target.value;
         outputElement.innerHTML = "";
-        translate();
+
+        //TEST
+        let t = dominoChainText(config.TEXT);
+
+        //translate();
     });
 }
 
