@@ -29,3 +29,5 @@ Ensuite le texte provient d'une API, et j'ai décidé de prendre la première da
 
 L'enfer commence, j'ai décidé de faire des mots exprimé en domino, et ceux-ci suivent une suite logique
 Après 5h de code, j'ai finalement opté pour une solution qui palie à un problème ou le dernier domino joué excède la valeur du caractère suivant : un domino magique qui absorbe l'excès (et marque la fin d'un caractère).
+
+Cependant, j'ai eu une illumination avant de dormir, il suffit juste de générer une chaine de domino aléatoire, avec pour `seed` d'aléatoire la valuation du mot, ce qui permet une reproductibilité. Et ensuite pour assurer une connexion convenable entre deux chaines, je stocke le dernier domino joué pour s'y adapter. Deplus si la chaine est placer dans l'autre sens, j'inverse l'ordres et les valeurs des dominos et voilà le travail, ce qui a été fait en 12h hier, a été fait en 2h aujourd'hui !
