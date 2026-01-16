@@ -5,16 +5,14 @@ Explorations de la génération de structures fractales auto-similaires utilisan
 ## Structure
 
 ```
-└───fractal_1 : Arbre fractal récursif avec particules
+└───island: Générateur et éditeur d'île
 ```
 
 ## Projets
 
-### **fractal_1** - Arbre fractal récursif
+### **island** - Générateur et éditeur d'îles
 
-Génération d'arbres fractals utilisant un algorithme d'arbre binaire récursif. Chaque branche se divise en deux sous-branches avec un angle configurable, créant une structure auto-similaire à plusieurs niveaux. Des particules animées parcourent l'arborescence en empruntant aléatoirement les chemins disponibles.
-
-Il y a des particules qui explore l'arbre aléatoirement
+Un générateur d'îles qui utilise du Bruit de Perlin, avec un éditeur inclus !
 
 ### Réflexion & Conception
 
