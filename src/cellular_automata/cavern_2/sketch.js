@@ -55,10 +55,10 @@ function setup() {
     });
     resetBtn.parent(container);
 
-    ruleBtn = createButton("Règle A");
+    ruleBtn = createButton("Rule A");
     ruleBtn.mousePressed(function () {
         isRuleB = !isRuleB;
-        ruleBtn.html(isRuleB ? "Règle B" : "Règle A");
+        ruleBtn.html(isRuleB ? "Rule B" : "Rule A");
         fillBoard();
     });
     ruleBtn.parent(container);
@@ -87,7 +87,7 @@ function draw() {
     if (keyIsDown(65) && millis() - lastATime > cooldown) {
         //a
         isRuleB = !isRuleB;
-        ruleBtn.html(isRuleB ? "Règle B" : "Règle A");
+        ruleBtn.html(isRuleB ? "Rule B" : "Rule A");
         fillBoard();
         lastATime = millis();
     }
